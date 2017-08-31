@@ -171,8 +171,20 @@ $(document).ready(function() {
 	
 	
 	$(document).on("input", "input.cellphone", function() {
-		this.value = this.value.replace(/[^\d\.\-]/g,'');
+		$(this).val(persianDigitsToEnglish($(this).val()));
+		this.value = this.value.replace(/[^0-9]/g,'');
 	});
+
+	$(document).on("input", ".bill-id", function() {
+		$(this).val(persianDigitsToEnglish($(this).val()));
+		this.value = this.value.replace(/[^0-9]/g,'');
+	});
+
+	$(document).on("input", ".bill-payment", function() {
+		$(this).val(persianDigitsToEnglish($(this).val()));
+		this.value = this.value.replace(/[^0-9]/g,'');
+	});
+
 	function validateEmail(sEmail) {
 		var filter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
 		if (filter.test(sEmail)) {
@@ -822,13 +834,27 @@ $(document).ready(function() {
 		}
 	}
 	
-	
-	
 	$(".save label").on('click', function() {
 		if ($(".save-information").prop('checked') == true) {
 			$.cookie('cellphone', $("#dataCellphone").val());
 			$.cookie('email', $("#dataEmail").val());
 		}
 	});
+	String.prototype.replaceArray = function(find, replace) {
+		var replaceString = this;
+		var regex; 
+		for (var i = 0; i < find.length; i++) {
+		regex = new RegExp(find[i], "g");
+		replaceString = replaceString.replace(regex, replace[i]);
+		}
+		return replaceString;
+	};
 	
+
+	function persianDigitsToEnglish(persianDigits) {
+		var firstPersianArray = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+		var secondPersianArray = ["۰", "۱", "۲", "٣", "٤", "٥", "٦", "٧", "۸", "۹"]; // just 3,4,5,6,7 is different
+		var englishArray = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+		return persianDigits.replaceArray(firstPersianArray, englishArray).replaceArray(secondPersianArray, englishArray);
+	}
 });
